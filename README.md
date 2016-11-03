@@ -1,13 +1,13 @@
 # Mini Games
-## Authors
+### Authors
 * Kelly Trinh, Yitian Zou, Yaqi Miao  
-## Purpose
+### Purpose
 * The user can choose one of two games to play.
 * Puck Game
     * A fun stress relieving game similar to darts. Aim for the target while avoiding obstacles! 
 * Bubble Ninja
 Suppose you are in the deep sea. Collect the air bubbles to gain points and time. Score as much as you can in the time limit. Try to live longer and score higher and don’t touch the poisonous bubbles because they reduce your time left.
-## Features
+### Features
 * Users can choose different games to play.
 * Game 1 (Puck):
     * User can score points when they hit the target. Smaller targets are worth more points than larger targets.
@@ -16,7 +16,7 @@ Suppose you are in the deep sea. Collect the air bubbles to gain points and time
     * The user has less time to hit the target.
 * Game 2 (Bubble):
     * Score point from slashing the bubbles (oxygen), but cutting the poison bubbles (carbon dioxide) takes away from the amount of time you have before the game ends. As the game progresses, the rate of objects coming up on the screen increases.  
-## Control Flow
+### Control Flow
 * User can choose which game they want to play.
 * User can start a new game.
 * If they choose Game 1 (Puck):
@@ -24,9 +24,9 @@ Suppose you are in the deep sea. Collect the air bubbles to gain points and time
 * If they choose Game 2 (Bubble):
     * They are taken to a game screen where they can play a game of bubble ninja, which ends when the timer ends.
 * After a game ends, they can see their current score, compared to their highest score. If this is their new high score, the app will announce it.  
-## Implementation
+### Implementation
 
-### Model
+#### Model
 * PuckGame.swift
     * Handles the logic for calculating score
 * BubbleGame.swift
@@ -44,13 +44,13 @@ Suppose you are in the deep sea. Collect the air bubbles to gain points and time
     * Board
     * Bubble
         * Poison Bubble (subclass)
-### View
+#### View
 * SelectGameUIView
 * StartGameUIVIew
 * PuckGameUIView
 * BubbleGameUIView
 * ScoreUIView
-### Controller
+#### Controller
 * SelectGameUIViewController
 * StartGameUIVIewController
 * PuckGameUIViewController

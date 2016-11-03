@@ -1,5 +1,5 @@
 # Mini Games
-###Authors
+### Authors
 * Kelly Trinh, Yitian Zou, Yaqi Miao  
 ###Purpose
 * The user can choose one of two games to play.

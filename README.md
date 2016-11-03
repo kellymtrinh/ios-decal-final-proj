@@ -1,6 +1,6 @@
 # Mini Games
 ## Authors
-* Kelly Trinh, Yitian Zou, Yaqi Miao 
+* Kelly Trinh, Yitian Zou, Yaqi Miao  
 ## Purpose
 * The user can choose one of two games to play.
 * Puck Game
@@ -15,7 +15,7 @@ Suppose you are in the deep sea. Collect the air bubbles to gain points and time
     * The target gets smaller and/or further away/move around. 
     * The user has less time to hit the target.
 * Game 2 (Bubble):
-    * Score point from slashing the bubbles (oxygen), but cutting the poison bubbles (carbon dioxide) takes away from the amount of time you have before the game ends. As the game progresses, the rate of objects coming up on the screen increases. 
+    * Score point from slashing the bubbles (oxygen), but cutting the poison bubbles (carbon dioxide) takes away from the amount of time you have before the game ends. As the game progresses, the rate of objects coming up on the screen increases.  
 ## Control Flow
 * User can choose which game they want to play.
 * User can start a new game.
@@ -23,7 +23,7 @@ Suppose you are in the deep sea. Collect the air bubbles to gain points and time
     * They are taken to a game screen where they can play a game of puck, which ends when the timer ends. 
 * If they choose Game 2 (Bubble):
     * They are taken to a game screen where they can play a game of bubble ninja, which ends when the timer ends.
-* After a game ends, they can see their current score, compared to their highest score. If this is their new high score, the app will announce it.
+* After a game ends, they can see their current score, compared to their highest score. If this is their new high score, the app will announce it.  
 ## Implementation
 
 ### Model

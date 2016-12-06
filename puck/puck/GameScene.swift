@@ -51,7 +51,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var ball = SKShapeNode()
     var target = SKShapeNode()
-    var numPucksLeft = 3
+    var numTargetsLeft = 3
     let timer = CountdownLabel()
     var timeOver = false
     var score = ScoreLabel()
@@ -141,15 +141,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         target.physicsBody?.restitution = 1.0
         target.physicsBody?.friction = 0.0
         target.physicsBody?.linearDamping = 0.0
-        let randomX = random(min: 1.0, max: 10.0)
-        let randomY = random(min: 1.0, max: 10.0)
+        let randomX = random(min: 3.0, max: 20.0)
+        let randomY = random(min: 3.0, max: 20.0)
         target.physicsBody?.applyImpulse(CGVector(dx: randomX, dy: randomY))
     }
     
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
       
-        if numPucksLeft > 0 && !timeOver {
+        if !timeOver {
         // 1 - Choose one of the touches to work with
         guard let touch = touches.first else {
             return
@@ -190,7 +190,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let actionMoveDone = SKAction.removeFromParent()
         projectile.run(SKAction.sequence([actionMove, actionMoveDone]))
         
-        numPucksLeft -= 1
+        
         }
         
     }
@@ -200,6 +200,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         projectile.removeFromParent()
         target.removeFromParent()
         score.addPoint(value: 1)
+        numTargetsLeft -= 1
+        let radius = Int(arc4random_uniform(50) + 10)
+        addTarget(radius: CGFloat(radius))
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
@@ -234,7 +237,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     private func resetGame() {
-        numPucksLeft = 3
+        
         timer.reset(duration: 50)
         
     }

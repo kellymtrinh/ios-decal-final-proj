@@ -54,17 +54,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var numPucksLeft = 3
     let timer = CountdownLabel()
     var timeOver = false
+    var score = ScoreLabel()
     
     override func didMove(to view: SKView) {
         /* Setup your scene here */
         self.backgroundColor = UIColor.white
         
         timer.position = CGPoint(x: self.frame.width/4, y: self.frame.height*0.90)
-        timer.fontSize = 65
+        timer.fontSize = 40
         timer.fontColor = UIColor.black
         addChild(timer)
         // number of seconds to countdown
         timer.startWithDuration(duration: 20)
+        
+        score.position = CGPoint(x: self.frame.width/4 * 3, y: self.frame.height*0.90)
+        score.fontSize = 30
+        score.fontColor = UIColor.black
+        addChild(score)
+        
         
         ball = SKShapeNode(circleOfRadius: 25)
         ball.position = CGPoint(x: self.frame.width/2, y: self.frame.height*0.10)
@@ -94,7 +101,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsWorld.contactDelegate = self
     }
     
-    func addTarget(radius: CGFloat, coord: CGPoint) {
+    private func addTarget(radius: CGFloat, coord: CGPoint) {
         
         target = SKShapeNode(circleOfRadius: radius)
         target.position = coord
@@ -162,6 +169,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         print("Hit")
         projectile.removeFromParent()
         target.removeFromParent()
+        score.addPoint(value: 1)
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
@@ -187,9 +195,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func update(_ currentTime: TimeInterval) {
         timer.update()
+        score.update()
         if (timer.hasFinished()) {
             timeOver = true
+            resetGame()
         }
+        
+    }
+    
+    private func resetGame() {
+        numPucksLeft = 3
+        timer.reset(duration: 50)
+        
     }
 
 }

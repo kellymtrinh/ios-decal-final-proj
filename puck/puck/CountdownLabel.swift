@@ -9,6 +9,7 @@ import SpriteKit
 
 class CountdownLabel: SKLabelNode {
     var endTime:NSDate!
+    
     func update() {
         let timeLeftInteger = Int(timeLeft())
         text = String(timeLeftInteger)
@@ -29,5 +30,9 @@ class CountdownLabel: SKLabelNode {
     
     func hasFinished() -> Bool {
         return timeLeft() == 0
+    }
+    
+    func reset(duration: TimeInterval) {
+        startWithDuration(duration: duration)
     }
 }

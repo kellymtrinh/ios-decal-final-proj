@@ -43,6 +43,7 @@ extension CGPoint {
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     struct PhysicsCategory {
+        static let None      : UInt32 = 0
         static let Target   : UInt32 = 0b1       // 1
         static let Projectile: UInt32 = 0b10      // 2
         static let Wall: UInt32 = 0b100 // 4
@@ -119,7 +120,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         target = SKShapeNode(circleOfRadius: radius)
         let actualY = random(min: radius, max: size.height - radius)
-        target.position = CGPoint(x: size.width + radius, y: actualY)
+        let actualX = random(min: radius, max: size.width - radius)
+        target.position = CGPoint(x: actualX, y: actualY)
         target.fillColor = UIColor.red
         
         target.physicsBody = SKPhysicsBody(circleOfRadius: radius)
@@ -130,11 +132,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.addChild(target)
         
-        let actualDuration = random(min:CGFloat(2.0), max:CGFloat(4.0))
+        //let actualDuration = random(min:CGFloat(2.0), max:CGFloat(4.0))
         
-        let actionMove = SKAction.move(to: CGPoint(x: -radius, y: actualY), duration:
-        TimeInterval(actualDuration))
-        target.run(SKAction.sequence([actionMove]))
+//        let actionMove = SKAction.move(to: CGPoint(x: -radius, y: actualY), duration:
+//        TimeInterval(100.0))
+//        target.run(SKAction.sequence([actionMove]))
+        
+        target.physicsBody?.restitution = 1.0
+        target.physicsBody?.friction = 0.0
+        target.physicsBody?.linearDamping = 0.0
+        let randomX = random(min: 1.0, max: 10.0)
+        let randomY = random(min: 1.0, max: 10.0)
+        target.physicsBody?.applyImpulse(CGVector(dx: randomX, dy: randomY))
     }
     
     
@@ -157,7 +166,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         projectile.physicsBody?.isDynamic = true
         projectile.physicsBody?.categoryBitMask = PhysicsCategory.Projectile
         projectile.physicsBody?.contactTestBitMask = PhysicsCategory.Target
-//        projectile.physicsBody?.collisionBitMask = PhysicsCategory.None
+        projectile.physicsBody?.collisionBitMask = PhysicsCategory.None
         projectile.physicsBody?.usesPreciseCollisionDetection = true //for fast-moving objects
         // 3 - Determine offset of location to projectile
         let offset = touchLocation - projectile.position
@@ -210,15 +219,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if ((firstBody.categoryBitMask & PhysicsCategory.Target != 0) &&
             (secondBody.categoryBitMask & PhysicsCategory.Projectile != 0)) {
             projectileDidCollideWithTarget(projectile: firstBody.node as! SKShapeNode, target: secondBody.node as! SKShapeNode)
-        }
-        //target bounces off wall
-        if ((firstBody.categoryBitMask & PhysicsCategory.Target != 0) &&
-            (secondBody.categoryBitMask & PhysicsCategory.Wall != 0)) {
-            print("hit a wall")
-//            target.physicsBody?.velocity = CGVector(dx: -1 * (target.physicsBody?.velocity.dx)!,
-//                                                    dy: -1 * (target.physicsBody?.velocity.dy)!)
-            
-            
         }
         
     }

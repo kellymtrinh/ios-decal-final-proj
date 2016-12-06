@@ -52,11 +52,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var ball = SKShapeNode()
     var target = SKShapeNode()
     var numPucksLeft = 3
-
+    let timer = CountdownLabel()
+    var timeOver = false
     
     override func didMove(to view: SKView) {
         /* Setup your scene here */
         self.backgroundColor = UIColor.white
+        
+        timer.position = CGPoint(x: self.frame.width/4, y: self.frame.height*0.90)
+        timer.fontSize = 65
+        timer.fontColor = UIColor.black
+        addChild(timer)
+        // number of seconds to countdown
+        timer.startWithDuration(duration: 20)
+        
         ball = SKShapeNode(circleOfRadius: 25)
         ball.position = CGPoint(x: self.frame.width/2, y: self.frame.height*0.10)
         ball.fillColor = UIColor.blue
@@ -102,7 +111,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if numPucksLeft > 0 {
+      
+        if numPucksLeft > 0 && !timeOver {
         // 1 - Choose one of the touches to work with
         guard let touch = touches.first else {
             return
@@ -173,6 +183,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             projectileDidCollideWithTarget(projectile: firstBody.node as! SKShapeNode, target: secondBody.node as! SKShapeNode)
         }
         
+    }
+    
+    override func update(_ currentTime: TimeInterval) {
+        timer.update()
+        if (timer.hasFinished()) {
+            timeOver = true
+        }
     }
 
 }

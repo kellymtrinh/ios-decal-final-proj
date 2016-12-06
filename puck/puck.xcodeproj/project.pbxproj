@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		5C2D93A01DF3906100EA98C7 /* TitleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2D939F1DF3906100EA98C7 /* TitleViewController.swift */; };
 		5C2D93A21DF3907100EA98C7 /* ScoreboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2D93A11DF3907100EA98C7 /* ScoreboardViewController.swift */; };
+		6914E1AB1DF64D6000AEFB9F /* CountdownLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6914E1AA1DF64D6000AEFB9F /* CountdownLabel.swift */; };
+		6914E1AD1DF64D6D00AEFB9F /* ScoreLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6914E1AC1DF64D6D00AEFB9F /* ScoreLabel.swift */; };
 		6D74D1CC1DF37CC200BE8692 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D74D1CB1DF37CC200BE8692 /* AppDelegate.swift */; };
 		6D74D1CE1DF37CC200BE8692 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 6D74D1CD1DF37CC200BE8692 /* GameScene.sks */; };
 		6D74D1D01DF37CC200BE8692 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 6D74D1CF1DF37CC200BE8692 /* Actions.sks */; };
@@ -41,6 +43,8 @@
 /* Begin PBXFileReference section */
 		5C2D939F1DF3906100EA98C7 /* TitleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitleViewController.swift; sourceTree = "<group>"; };
 		5C2D93A11DF3907100EA98C7 /* ScoreboardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreboardViewController.swift; sourceTree = "<group>"; };
+		6914E1AA1DF64D6000AEFB9F /* CountdownLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountdownLabel.swift; sourceTree = "<group>"; };
+		6914E1AC1DF64D6D00AEFB9F /* ScoreLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreLabel.swift; sourceTree = "<group>"; };
 		6D74D1C81DF37CC200BE8692 /* puck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = puck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D74D1CB1DF37CC200BE8692 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6D74D1CD1DF37CC200BE8692 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -107,6 +111,8 @@
 		6D74D1CA1DF37CC200BE8692 /* puck */ = {
 			isa = PBXGroup;
 			children = (
+				6914E1AC1DF64D6D00AEFB9F /* ScoreLabel.swift */,
+				6914E1AA1DF64D6000AEFB9F /* CountdownLabel.swift */,
 				6D74D1CB1DF37CC200BE8692 /* AppDelegate.swift */,
 				6D74D1CD1DF37CC200BE8692 /* GameScene.sks */,
 				6D74D1CF1DF37CC200BE8692 /* Actions.sks */,
@@ -279,7 +285,9 @@
 				6D74D1D21DF37CC200BE8692 /* GameScene.swift in Sources */,
 				5C2D93A01DF3906100EA98C7 /* TitleViewController.swift in Sources */,
 				6D74D1D41DF37CC200BE8692 /* GameViewController.swift in Sources */,
+				6914E1AD1DF64D6D00AEFB9F /* ScoreLabel.swift in Sources */,
 				6D74D1CC1DF37CC200BE8692 /* AppDelegate.swift in Sources */,
+				6914E1AB1DF64D6000AEFB9F /* CountdownLabel.swift in Sources */,
 				5C2D93A21DF3907100EA98C7 /* ScoreboardViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -51,7 +51,7 @@ class ScoreboardViewController: UIViewController {
 
     
     func backButtonTapped(sender: UIButton) {
-        self.present(TitleViewController(), animated: true, completion: nil)
+        self.present(TitleViewController(), animated: false, completion: nil)
     }
 
 }

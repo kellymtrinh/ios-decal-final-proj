@@ -78,10 +78,10 @@ class TitleViewController: UIViewController {
         switch sender.currentTitle ?? "" {
         case "New Game":
             let gameViewController = GameViewController()
-            self.present(gameViewController, animated: true, completion: nil)
+            self.present(gameViewController, animated: false, completion: nil)
         case "Scoreboard":
             let scoreboardViewController = ScoreboardViewController()
-            self.present(scoreboardViewController, animated: true, completion: nil)
+            self.present(scoreboardViewController, animated: false, completion: nil)
         default:
             NSLog("Alert: Unkown button with title \(sender.currentTitle ?? "")")
         }

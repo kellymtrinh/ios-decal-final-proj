@@ -44,19 +44,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     struct PhysicsCategory {
         static let None      : UInt32 = 0
-        static let All       : UInt32 = UInt32.max
         static let Target   : UInt32 = 0b1       // 1
         static let Projectile: UInt32 = 0b10      // 2
+        static let Wall: UInt32 = 0b100 // 4
     }
     
     var ball = SKShapeNode()
     var target = SKShapeNode()
-    var numPucksLeft = 3
-
+    var numTargetsLeft = 3
+    let timer = CountdownLabel()
+    var timeOver = false
+    var score = ScoreLabel()
+    
     
     override func didMove(to view: SKView) {
         /* Setup your scene here */
         self.backgroundColor = UIColor.white
+        
+        timer.position = CGPoint(x: self.frame.width/4, y: self.frame.height*0.90)
+        timer.fontSize = 40
+        timer.fontColor = UIColor.black
+        addChild(timer)
+        // number of seconds to countdown
+        timer.startWithDuration(duration: 20)
+        
+        score.position = CGPoint(x: self.frame.width/4 * 3, y: self.frame.height*0.90)
+        score.fontSize = 30
+        score.fontColor = UIColor.black
+        addChild(score)
+        
+        
         ball = SKShapeNode(circleOfRadius: 25)
         ball.position = CGPoint(x: self.frame.width/2, y: self.frame.height*0.10)
         ball.fillColor = UIColor.blue
@@ -74,35 +91,65 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //        }
         
         var radius = Int(arc4random_uniform(50) + 10)
-        addTarget(radius: CGFloat(radius), coord: CGPoint(x: self.frame.width/2, y:self.frame.height*0.6))
+        addTarget(radius: CGFloat(radius))
         
         radius = Int(arc4random_uniform(50) + 10)
-        addTarget(radius: CGFloat(radius), coord: CGPoint(x: self.frame.width/4, y:self.frame.height*0.3))
+        addTarget(radius: CGFloat(radius))
             
         radius = Int(arc4random_uniform(50) + 10)
-        addTarget(radius: CGFloat(radius), coord: CGPoint(x: 3*self.frame.width/4, y:self.frame.height*0.8))
+        addTarget(radius: CGFloat(radius))
+        
         physicsWorld.gravity = CGVector.zero
         physicsWorld.contactDelegate = self
+        physicsBody = SKPhysicsBody(edgeLoopFrom : self.frame)
+        physicsBody?.categoryBitMask = PhysicsCategory.Wall
+        physicsBody?.collisionBitMask = PhysicsCategory.Target
+        physicsBody?.contactTestBitMask = PhysicsCategory.Target
+        physicsBody?.isDynamic = false
     }
     
-    func addTarget(radius: CGFloat, coord: CGPoint) {
+    func random() -> CGFloat {
+        return CGFloat(Float(arc4random()) / 0xFFFFFFFF)
+    }
+    
+    func random(min: CGFloat, max: CGFloat) -> CGFloat {
+        return random() * (max - min) + min
+    }
+    
+    private func addTarget(radius: CGFloat) {
         
         target = SKShapeNode(circleOfRadius: radius)
-        target.position = coord
+        let actualY = random(min: radius, max: size.height - radius)
+        let actualX = random(min: radius, max: size.width - radius)
+        target.position = CGPoint(x: actualX, y: actualY)
         target.fillColor = UIColor.red
         
         target.physicsBody = SKPhysicsBody(circleOfRadius: radius)
         target.physicsBody?.isDynamic = true
         target.physicsBody?.categoryBitMask = PhysicsCategory.Target
-        target.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile //notify contact listener when intersect with projectiles
-        target.physicsBody?.collisionBitMask = PhysicsCategory.None //bouncing
+        target.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile | PhysicsCategory.Wall //notify contact listener when intersect with projectiles
+        target.physicsBody?.collisionBitMask = PhysicsCategory.Wall //bouncing
         
         self.addChild(target)
+        
+        //let actualDuration = random(min:CGFloat(2.0), max:CGFloat(4.0))
+        
+//        let actionMove = SKAction.move(to: CGPoint(x: -radius, y: actualY), duration:
+//        TimeInterval(100.0))
+//        target.run(SKAction.sequence([actionMove]))
+        
+        target.physicsBody?.restitution = 1.0
+        target.physicsBody?.friction = 0.0
+        target.physicsBody?.linearDamping = 0.0
+        let randomX = random(min: 3.0, max: 20.0)
+        let randomY = random(min: 3.0, max: 20.0)
+        target.physicsBody?.applyImpulse(CGVector(dx: randomX, dy: randomY))
     }
     
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if numPucksLeft > 0 {
+      
+        if !timeOver {
         // 1 - Choose one of the touches to work with
         guard let touch = touches.first else {
             return
@@ -143,7 +190,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let actionMoveDone = SKAction.removeFromParent()
         projectile.run(SKAction.sequence([actionMove, actionMoveDone]))
         
-        numPucksLeft -= 1
+        
         }
         
     }
@@ -152,6 +199,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         print("Hit")
         projectile.removeFromParent()
         target.removeFromParent()
+        score.addPoint(value: 1)
+        numTargetsLeft -= 1
+        let radius = Int(arc4random_uniform(50) + 10)
+        addTarget(radius: CGFloat(radius))
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
@@ -167,11 +218,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             secondBody = contact.bodyA
         }
         
-        // 2
+        // projectile hits target
         if ((firstBody.categoryBitMask & PhysicsCategory.Target != 0) &&
             (secondBody.categoryBitMask & PhysicsCategory.Projectile != 0)) {
             projectileDidCollideWithTarget(projectile: firstBody.node as! SKShapeNode, target: secondBody.node as! SKShapeNode)
         }
+        
+    }
+    
+    override func update(_ currentTime: TimeInterval) {
+        timer.update()
+        score.update()
+        if (timer.hasFinished()) {
+            timeOver = true
+            resetGame()
+        }
+        
+    }
+    
+    private func resetGame() {
+        
+        timer.reset(duration: 50)
         
     }
 

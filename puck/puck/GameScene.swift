@@ -51,7 +51,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var ball = SKShapeNode()
     var target = SKShapeNode()
-    var numTargetsLeft = 3
+    var numTargetsLeft = 0
     let timer = CountdownLabel()
     var timeOver = false
     var score = ScoreLabel()
@@ -66,7 +66,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         timer.fontColor = UIColor.white
         addChild(timer)
         // number of seconds to countdown
-        timer.startWithDuration(duration: 20)
+        timer.startWithDuration(duration: 60)
         
         score.position = CGPoint(x: self.frame.width/4 * 3, y: size.height - 64)
         score.fontSize = 30
@@ -133,6 +133,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         target.physicsBody?.collisionBitMask = PhysicsCategory.Wall //bouncing
         
         self.addChild(target)
+        numTargetsLeft += 1
         
         //let actualDuration = random(min:CGFloat(2.0), max:CGFloat(4.0))
         
@@ -233,8 +234,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.run(SKAction.playSoundFileNamed("hit", waitForCompletion: false))
         self.run(SKAction.wait(forDuration: 1))
         numTargetsLeft -= 1
-        let radius = Int(arc4random_uniform(50) + 10)
-        addTarget(radius: CGFloat(radius))
+        
+        print(numTargetsLeft)
+        
+//        let radius = Int(arc4random_uniform(50) + 10)
+//        addTarget(radius: CGFloat(radius))
+        if (numTargetsLeft < 1) {
+            var radius = Int(arc4random_uniform(50) + 10)
+            addTarget(radius: CGFloat(radius))
+            radius = Int(arc4random_uniform(50) + 10)
+            addTarget(radius: CGFloat(radius))
+            radius = Int(arc4random_uniform(50) + 10)
+            addTarget(radius: CGFloat(radius))
+        }
+        
+        
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
@@ -272,7 +286,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         score.update()
         if (timer.hasFinished()) {
             timeOver = true
-            resetGame()
+            //resetGame()
+            let gameOverScene = GameOverScene(size: self.size, score: score.getScore())
+            self.view?.presentScene(gameOverScene)
         }
         
     }

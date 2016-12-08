@@ -11,18 +11,34 @@ import SpriteKit
 
 class GameOverScene: SKScene {
     
+    var viewController: UIViewController?
     var button: SKNode! = nil
+    var main: SKNode! = nil
     
     override func didMove(to view: SKView) {
+        
+        
         button = SKSpriteNode(color: SKColor.white, size: CGSize(width: 100, height: 44))
+        button.name = "button"
         button.position = CGPoint(x:self.frame.width/2, y:self.frame.height*0.4);
         self.addChild(button)
+        
+        main = SKSpriteNode(color: SKColor.white, size: CGSize(width:120, height:44))
+        main.name = "main"
+        main.position = CGPoint(x: self.frame.width/2, y: self.frame.height*0.25)
+        self.addChild(main)
         
         let label = SKLabelNode(text: "Play again")
         label.position = CGPoint(x: self.frame.width/2, y:self.frame.height*0.39)
         label.fontSize = 28
         label.fontColor = UIColor.black
         addChild(label)
+        
+        let menu = SKLabelNode(text: "Main menu")
+        menu.position = CGPoint(x: self.frame.width/2, y:self.frame.height*0.24)
+        menu.fontSize = 28
+        menu.fontColor = UIColor.black
+        addChild(menu)
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -31,11 +47,14 @@ class GameOverScene: SKScene {
             // Get the location of the touch in this scene
             let location = touch.location(in: self)
             // Check if the location of the touch is within the button's bounds
-            if button.contains(location) {
-               
-                let scene = GameScene(size: self.size)
-                self.view?.presentScene(scene)
+            if main.contains(location) {
+                let titleViewController = TitleViewController()
+                viewController?.present(titleViewController, animated: true, completion: nil)
+            } else if button.contains(location) {
+                let gameViewController = GameViewController()
+                viewController?.present(gameViewController, animated: true, completion: nil)
             }
+            
         }
     }
 

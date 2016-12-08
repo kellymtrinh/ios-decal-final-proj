@@ -49,6 +49,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         static let Wall: UInt32 = 0b100 // 4
     }
     
+    var viewController: UIViewController?
+    
     var ball = SKShapeNode()
     var target = SKShapeNode()
     var numTargetsLeft = 0
@@ -78,18 +80,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ball.position = CGPoint(x: self.frame.width/2, y: self.frame.height*0.10)
         ball.fillColor = UIColor.blue
         self.addChild(ball)
-        
-        /* how to generate targets in random positions but not have them overlap? */
-//        for _ in 1...3 {
-//            let radius = Int(arc4random_uniform(50) + 10)
-//            let x_scale = arc4random_uniform(10) / 10
-//            let y_scale = (arc4random_uniform(9) + 1) / 10
-//        
-//            addTarget(radius: CGFloat(radius), x : UInt32(x_scale*UInt32(self.frame.width)),
-//                    y: UInt32(y_scale * UInt32(self.frame.height)))
-//            
-//        }
-        
+ 
         var radius = Int(arc4random_uniform(50) + 10)
         addTarget(radius: CGFloat(radius))
         
@@ -133,11 +124,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(target)
         numTargetsLeft += 1
         
-        //let actualDuration = random(min:CGFloat(2.0), max:CGFloat(4.0))
-        
-//        let actionMove = SKAction.move(to: CGPoint(x: -radius, y: actualY), duration:
-//        TimeInterval(100.0))
-//        target.run(SKAction.sequence([actionMove]))
+
         
         target.physicsBody?.restitution = 1.0
         target.physicsBody?.friction = 0.0
@@ -197,16 +184,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func projectileDidCollideWithTarget(projectile: SKShapeNode, target: SKShapeNode) {
-        print("Hit")
+        
         projectile.removeFromParent()
         target.removeFromParent()
         score.addPoint(value: 1)
         numTargetsLeft -= 1
         
-        print(numTargetsLeft)
-        
-//        let radius = Int(arc4random_uniform(50) + 10)
-//        addTarget(radius: CGFloat(radius))
+
         if (numTargetsLeft < 1) {
             var radius = Int(arc4random_uniform(50) + 10)
             addTarget(radius: CGFloat(radius))
@@ -247,6 +231,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             timeOver = true
             //resetGame()
             let gameOverScene = GameOverScene(size: self.size, score: score.getScore())
+            gameOverScene.viewController = viewController
             self.view?.presentScene(gameOverScene)
         }
         

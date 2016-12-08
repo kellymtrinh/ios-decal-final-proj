@@ -23,7 +23,7 @@ class GameViewController: UIViewController {
         skView.ignoresSiblingOrder = true
         scene.scaleMode = .aspectFill
         
-        
+        scene.viewController = self
         skView.presentScene(scene)
     }
 

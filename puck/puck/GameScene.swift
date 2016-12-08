@@ -66,7 +66,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         timer.fontColor = UIColor.black
         addChild(timer)
         // number of seconds to countdown
-        timer.startWithDuration(duration: 20)
+        timer.startWithDuration(duration: 10)
         
         score.position = CGPoint(x: self.frame.width/4 * 3, y: self.frame.height*0.90)
         score.fontSize = 30
@@ -231,7 +231,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         score.update()
         if (timer.hasFinished()) {
             timeOver = true
-            resetGame()
+            //resetGame()
+            let gameOverScene = GameOverScene(size: self.size, score: score.getScore())
+            self.view?.presentScene(gameOverScene)
         }
         
     }

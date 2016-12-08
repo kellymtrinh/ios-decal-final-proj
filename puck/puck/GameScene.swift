@@ -55,6 +55,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let timer = CountdownLabel()
     var timeOver = false
     var score = ScoreLabel()
+    var titleVCDelegate: GameSceneDelegate?
     
     
     override func didMove(to view: SKView) {
@@ -66,7 +67,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         timer.fontColor = UIColor.white
         addChild(timer)
         // number of seconds to countdown
-        timer.startWithDuration(duration: 60)
+        timer.startWithDuration(duration: 30)
         
         score.position = CGPoint(x: self.frame.width/4 * 3, y: size.height - 64)
         score.fontSize = 30
@@ -288,6 +289,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             timeOver = true
             //resetGame()
             let gameOverScene = GameOverScene(size: self.size, score: score.getScore())
+            gameOverScene.titleVCDelegate = titleVCDelegate
             self.view?.presentScene(gameOverScene)
         }
         

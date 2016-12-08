@@ -10,7 +10,11 @@ import UIKit
 import SpriteKit
 import GameplayKit
 
-class GameViewController: UIViewController {
+protocol GameSceneDelegate {
+    func returnToTitle()
+}
+
+class GameViewController: UIViewController, GameSceneDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +26,7 @@ class GameViewController: UIViewController {
         skView.showsNodeCount = true
         skView.ignoresSiblingOrder = true
         scene.scaleMode = .aspectFill
-        
+        scene.titleVCDelegate = self
         
         skView.presentScene(scene)
     }
@@ -46,5 +50,9 @@ class GameViewController: UIViewController {
 
     override var prefersStatusBarHidden: Bool {
         return true
+    }
+    
+    func returnToTitle() {
+        self.present(TitleViewController(), animated: false, completion: nil)
     }
 }

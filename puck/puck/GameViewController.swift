@@ -27,7 +27,6 @@ class GameViewController: UIViewController, GameSceneDelegate {
         skView.ignoresSiblingOrder = true
         scene.scaleMode = .aspectFill
         scene.titleVCDelegate = self
-        
         skView.presentScene(scene)
     }
 

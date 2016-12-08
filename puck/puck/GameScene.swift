@@ -59,24 +59,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func didMove(to view: SKView) {
         /* Setup your scene here */
-        self.backgroundColor = UIColor.white
+        self.backgroundColor = UIColor.black
         
-        timer.position = CGPoint(x: self.frame.width/4, y: self.frame.height*0.90)
+        timer.position = CGPoint(x: 128, y: size.height - 64)
         timer.fontSize = 40
-        timer.fontColor = UIColor.black
+        timer.fontColor = UIColor.white
         addChild(timer)
         // number of seconds to countdown
         timer.startWithDuration(duration: 20)
         
-        score.position = CGPoint(x: self.frame.width/4 * 3, y: self.frame.height*0.90)
+        score.position = CGPoint(x: self.frame.width/4 * 3, y: size.height - 64)
         score.fontSize = 30
-        score.fontColor = UIColor.black
+        score.fontColor = UIColor.white
         addChild(score)
         
         
-        ball = SKShapeNode(circleOfRadius: 25)
+        ball = SKShapeNode(circleOfRadius: 16)
         ball.position = CGPoint(x: self.frame.width/2, y: self.frame.height*0.10)
-        ball.fillColor = UIColor.blue
+        ball.fillColor = UIColor.white
         self.addChild(ball)
         
         /* how to generate targets in random positions but not have them overlap? */
@@ -98,6 +98,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         radius = Int(arc4random_uniform(50) + 10)
         addTarget(radius: CGFloat(radius))
+        
+        
         
         physicsWorld.gravity = CGVector.zero
         physicsWorld.contactDelegate = self
@@ -122,7 +124,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let actualY = random(min: radius, max: size.height - radius)
         let actualX = random(min: radius, max: size.width - radius)
         target.position = CGPoint(x: actualX, y: actualY)
-        target.fillColor = UIColor.red
+        target.fillColor = UIColor.white
         
         target.physicsBody = SKPhysicsBody(circleOfRadius: radius)
         target.physicsBody?.isDynamic = true
@@ -138,6 +140,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //        TimeInterval(100.0))
 //        target.run(SKAction.sequence([actionMove]))
         
+        self.addChild(pauseButtonNode())
+        
         target.physicsBody?.restitution = 1.0
         target.physicsBody?.friction = 0.0
         target.physicsBody?.linearDamping = 0.0
@@ -146,6 +150,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         target.physicsBody?.applyImpulse(CGVector(dx: randomX, dy: randomY))
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        var touch = touches.first
+        var location = touch!.location(in: self)
+        var node = self.nodes(at: location).first
+        
+        if (node != nil && node!.name == "pauseButtonNode") {
+            let pauseNode = node as! SKSpriteNode
+            if self.view?.isPaused == false {
+                changePauseImage(pauseNode, state: false)
+                self.view?.isPaused = true
+            } else {
+                self.view?.isPaused = false
+                changePauseImage(pauseNode, state: true)
+            }
+        }
+    }
+    
+    func changePauseImage(_ node: SKSpriteNode, state pause: Bool) {
+        var action: SKAction
+        if pause {
+            action = SKAction.setTexture(SKTexture(imageNamed: "pause"))
+        } else {
+            action = SKAction.setTexture(SKTexture(imageNamed: "play"))
+        }
+        node.run(action)
+    }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
       
@@ -158,11 +188,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // 2 - Set up initial location of projectile
         
-        let projectile = SKShapeNode(circleOfRadius: 10)
-        projectile.fillColor = UIColor.black
+        let projectile = SKSpriteNode(imageNamed: "projectile")   //(circleOfRadius: 10)
+//        projectile.fillColor = UIColor.white
         projectile.position = CGPoint(x: self.frame.width/2, y: self.frame.height*0.10)
         
-        projectile.physicsBody = SKPhysicsBody(circleOfRadius: 25)
+        projectile.physicsBody = SKPhysicsBody(circleOfRadius: 16)
         projectile.physicsBody?.isDynamic = true
         projectile.physicsBody?.categoryBitMask = PhysicsCategory.Projectile
         projectile.physicsBody?.contactTestBitMask = PhysicsCategory.Target
@@ -195,11 +225,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
-    func projectileDidCollideWithTarget(projectile: SKShapeNode, target: SKShapeNode) {
+    func projectileDidCollideWithTarget(projectile: SKSpriteNode, target: SKShapeNode) {
         print("Hit")
-        projectile.removeFromParent()
+//        projectile.removeFromParent()
         target.removeFromParent()
         score.addPoint(value: 1)
+        self.run(SKAction.playSoundFileNamed("hit", waitForCompletion: false))
+        self.run(SKAction.wait(forDuration: 1))
         numTargetsLeft -= 1
         let radius = Int(arc4random_uniform(50) + 10)
         addTarget(radius: CGFloat(radius))
@@ -218,10 +250,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             secondBody = contact.bodyA
         }
         
+        if firstBody.node == nil || secondBody.node == nil {
+            return
+        }
+        
         // projectile hits target
         if ((firstBody.categoryBitMask & PhysicsCategory.Target != 0) &&
             (secondBody.categoryBitMask & PhysicsCategory.Projectile != 0)) {
-            projectileDidCollideWithTarget(projectile: firstBody.node as! SKShapeNode, target: secondBody.node as! SKShapeNode)
+            projectileDidCollideWithTarget(projectile: secondBody.node as! SKSpriteNode, target: firstBody.node as! SKShapeNode)
+//            let firstNode = firstBody as! SKSpriteNode
+//            let secondNode = secondBody as! SKSpriteNode
+//            if (firstNode.name != "pauseButtonNode" && secondNode.name != "pauseButtonNode") {
+//                projectileDidCollideWithTarget(projectile: firstBody.node as! SKShapeNode, target: secondBody.node as! SKShapeNode)
+//            }
         }
         
     }
@@ -240,6 +281,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         timer.reset(duration: 50)
         
+    }
+    
+    func pauseButtonNode() -> SKSpriteNode {
+        let pauseButton = SKSpriteNode(imageNamed: "pause")
+        pauseButton.position = CGPoint(x:64, y:size.height - 64)
+        pauseButton.name = "pauseButtonNode"
+        pauseButton.zPosition = 1.0
+        return pauseButton;
     }
 
 }

@@ -56,7 +56,24 @@ class GameOverScene: SKScene {
         label.fontColor = UIColor.black
         addChild(label)
         
+       
+        let userDefaults = UserDefaults.standard //returns shared defaults object.
+        
+        if let highScore = userDefaults.value(forKey: "highScore") as? Int{ //Returns the integer value associated with the specified key.
+            //do something here when a highscore exists
+            if (highScore < score) {
+                userDefaults.set(score, forKey: "highScore") //if this score is higher, set it
+            }
+            print(highScore)
+        } else {
+            //no highscore exists
+            userDefaults.set(score, forKey: "highScore") //if no highscore exists, set it
+            print("setting high score")
+            print(score)
+        }
+        
 
+     
         
     }
     
